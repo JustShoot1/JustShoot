@@ -4,22 +4,28 @@ import java.awt.Color;
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 import robocode.util.*;
 
-public class JustShoot1 extends RateControlRobot {
-  
-    public void run() {
-        
+public class JustShoot extends RateControlRobot {
+    /**
+     * run: executado quando o round for iniciado
+     */
+    public void run() { 
+		
+        // Definindo posição inicial e direção do robo
         setAdjustGunForRobotTurn(true);
         setAdjustRadarForGunTurn(true);
         setAdjustRadarForRobotTurn(true);
 
+        // Dando vida ao robo em um loop infinito
         while (true) {
-            setVelocityRate(5);
-            setTurnRateRadians(0);
+            setVelocityRate(40);
+            setTurnRateRadians(50);
             execute();
             turnRadarRight(360);
         }
     }
- 
+    /**
+     * onScannedRobot: Executado quando o radar encontra um robo.
+     */
     public void onScannedRobot(ScannedRobotEvent e) {
         double potenciaDoTiro = Math.min(2.0, getEnergy());
         double distancia = getHeadingRadians() + e.getBearingRadians();
@@ -59,7 +65,9 @@ public class JustShoot1 extends RateControlRobot {
             setTurnRate(getTurnRate() * -1);
         }
     }
- 
+    /**
+     * onHitByBullet: É executado quando o robô leva um tiro.
+     */
     public void onHitByBullet(HitByBulletEvent e) {
         double giroDoRadar = normalRelativeAngleDegrees(e.getBearing() + getHeading() - getRadarHeading());
         setTurnRadarRight(giroDoRadar);
@@ -67,21 +75,27 @@ public class JustShoot1 extends RateControlRobot {
         setTurnRate(3);
         setVelocityRate(-1 * getVelocityRate());
     }
-   
+    /**
+     * onHitWall: É executado quando o robô colide com a parede.
+     */
     public void onHitWall(HitWallEvent e) {
-        setVelocityRate(-1 * getVelocityRate());
-        setTurnRate(getTurnRate() + 2);
+        setVelocityRate(-2 * getVelocityRate());
+        setTurnRate(getTurnRate() + 4);
         execute();
     }
-   
+    /**
+     * onHitRobot: É executado quando o robô bate em outro robô.
+     */
     public void onHitRobot(HitRobotEvent e) {
         double giroDoCanhao = normalRelativeAngleDegrees(e.getBearing() + getHeading() - getGunHeading());
         turnGunRight(giroDoCanhao);
-        setFire(3);
-        setVelocityRate(getVelocity() + 3);
+        setFire(5);
+        setVelocityRate(getVelocity() + 7);
         execute();
     }
-  
+    /**
+     * onWin: É executado quando o robô ganha o round.
+     */
     public void onWin(WinEvent e) {
         int uhuu = 1;
         while (true) {
